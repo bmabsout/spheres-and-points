@@ -1,3 +1,9 @@
 [submodule "reflex-platform"]
 	path = reflex-platform
 	url = https://github.com/reflex-frp/reflex-platform
+[submodule "modifiedDeps/doctest"]
+	path = modifiedDeps/doctest
+	url = https://github.com/sol/doctest
+[submodule "modifiedDeps/ghcjs-three"]
+	path = modifiedDeps/ghcjs-three
+	url = https://github.com/manyoo/ghcjs-three

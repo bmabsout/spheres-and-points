@@ -2,19 +2,15 @@
 
 (import ./reflex-platform {}).project ({ pkgs, ... }: {
   packages = {
-    common = ./common;
-    backend = ./backend;
     frontend = ./frontend;
   };
 
-  android.frontend = {
-    executableName = "frontend";
-    applicationId = "org.example.frontend";
-    displayName = "Example Android App";
+  overrides = self: super: rec {
+    doctest = self.callPackage ./modifiedDeps/doctest/doctest.nix {};  
+    ghcjs-three = self.callPackage ./modifiedDeps/ghcjs-three/three.nix {};  
   };
 
   shells = {
-    ghc = ["common" "backend" "frontend"];
-    ghcjs = ["common" "frontend"];
+    ghcjs = ["frontend"];
   };
 })
