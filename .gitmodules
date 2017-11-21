@@ -3,4 +3,4 @@
 	url = https://github.com/reflex-frp/reflex-platform
 [submodule "modifiedDeps/ghcjs-three"]
 	path = modifiedDeps/ghcjs-three
-	url = https://github.com/manyoo/ghcjs-three
+	url = https://github.com/bmabsout/ghcjs-three.git
