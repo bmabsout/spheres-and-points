@@ -1,9 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DataKinds #-}
 
 module CircleDescent where
 
 import ThreeSharedDrawing
 import Linear
+import ConstructibleV
 import System.Random
 import GHCJS.Three
 import Control.Monad
@@ -20,7 +22,7 @@ numIcos = 10
 main :: IO ()
 main = do
   polars <- randPolars
-  let spline = polars & take numIcos & makeSpline cost (conjugateGradientDescent cost)
+  let spline = convergedSpline polarToCircle polars
   sceneSetup (SceneSetup {
       _spline     = spline
     , _createAll  = createAll
@@ -31,10 +33,7 @@ main = do
     , _zheight    = 11
   })
 
-cost :: (Eq a, Floating a) => [a] -> a
-cost l = l &> polarToCircle & gravityCost
-
-createAll :: Scene -> [Double] -> Three [Mesh]
+createAll :: Scene -> [V 1 Double] -> Three [Mesh]
 createAll scene startConfig =
   startConfig &> (\angle ->
                     do ico <- makeIco scene
@@ -42,7 +41,7 @@ createAll scene startConfig =
                        return ico)
               & sequence
 
-updateAll :: [Mesh] -> Double -> [Double] -> Three ()
+updateAll :: [Mesh] -> Double -> [V 1 Double] -> Three ()
 updateAll elements time currAngles =
   (zip elements currAngles) `forM_` (\(ico,currAngle) ->
     do angles <- rotation ico
@@ -50,20 +49,17 @@ updateAll elements time currAngles =
        angleToCircle currAngle ico
   )
 
-polarToCircle :: (Floating a) => a -> V2 a
-polarToCircle = angle &. (*(numIcos/pi))
+polarToCircle :: (Floating a) => V 1 a -> V 2 a
+polarToCircle (a :> Nil) = angle a * numIcos / pi & toV
 
-angleToCircle :: Double -> Mesh -> Three ()
+angleToCircle :: V 1 Double -> Mesh -> Three ()
 angleToCircle = polarToCircle &. pos &. setPosition
-  where pos (V2 x y) = Vector3 x y 0
+  where pos (x :> y :> Nil) = Vector3 x y 0
 
 -- perfect m = iterate (+dAngle) 0
 --             & take m
 --   where dAngle = 2*pi / fromIntegral m
 
-randPolars :: IO [Double]
-randPolars = do
-    -- g <- newStdGen
-    let polars = randomRs (-pi,pi) (mkStdGen 653)
-    return (polars & take numIcos)
+randPolars :: IO [V 1 Double]
+randPolars = randVecs &> take numIcos &> map (* (2*pi))
 

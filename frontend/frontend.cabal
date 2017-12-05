@@ -30,7 +30,7 @@ library
                      , ghcjs-three
                      , ghcjs-dom-jsffi
                      , vector
-                     , split
+                     , constructible-v
   default-language:  Haskell2010
 
 executable frontend-exe

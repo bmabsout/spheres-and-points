@@ -21,10 +21,10 @@ import GradientDescent
 import Spline
 import Convenience
 
-data SceneSetup = SceneSetup {
-    _spline     :: V.Vector [Double]
-  , _createAll  :: Scene -> [Double] -> Three [Mesh]
-  , _updateAll  :: [Mesh] -> Double -> [Double] -> Three ()
+data SceneSetup v = SceneSetup {
+    _spline     :: V.Vector [v Double]
+  , _createAll  :: Scene -> [v Double] -> Three [Mesh]
+  , _updateAll  :: [Mesh] -> Double -> [v Double] -> Three ()
   , _divId      :: JSString
   , _width      :: Double
   , _height     :: Double
@@ -32,7 +32,7 @@ data SceneSetup = SceneSetup {
 }
 
 
-sceneSetup :: SceneSetup -> Three ()
+sceneSetup :: (Applicative v,Num (v Double)) => SceneSetup v -> Three ()
 sceneSetup (SceneSetup spline createAll updateAll divId width height zheight) = do
   scene <- mkScene
   camera <- mkPerspectiveCamera 45 1 0.1 1000
