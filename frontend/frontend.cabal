@@ -1,5 +1,5 @@
 name:                frontend
-version:             0.1.0.0
+version:             1.0.0
 -- synopsis:            
 description:         ghcjs code that made the visualizations on my blog
 license:             BSD3
@@ -19,14 +19,11 @@ library
                      , ThreeSharedDrawing
                      , GradientDescent
   build-depends:     base >= 4.9 && < 4.11
-                     , reflex-dom
-                     , reflex
                      , ad
                      , random
                      , mtl
                      , linear
                      , text
-                     , diagrams-lib
                      , ghcjs-three
                      , ghcjs-dom-jsffi
                      , vector
